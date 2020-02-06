@@ -8,11 +8,21 @@ app.use(bodyParser.urlencoded({extended:true, limit:'5mb'}));
 var cors = require('cors')
 app.use(cors())
 
+app.get('/details',function(req,res){
+  UserRegistration.find({}, function(err, user){  
+    if(err){  
+       res.json(err);  
+    }  
+    else{   
+      console.log(user)     
+       res.json(user);  
+    }  
+ });  
+})
 app.post('/registration', function(req,res){
-  const {file, name, phone_Number, address, email, password, dateOfBirth, security_Question, security_Answer} = req.body;
-  console.log('body', req.body)
+  const {_id,file, name, phone_Number, address, email, password, dateOfBirth, security_Question, security_Answer} = req.body;
   var newRegister = new UserRegistration({
-    file, name, phone_Number, address, email, password, dateOfBirth, security_Question, security_Answer
+    _id,file, name, phone_Number, address, email, password, dateOfBirth, security_Question, security_Answer
   });
    newRegister.save((error, user) => {
       if (error) {
@@ -21,6 +31,7 @@ app.post('/registration', function(req,res){
         res.send("Data not found");
       } else {
         res.status(200).send(user);
+
       }
     })
 })
@@ -40,7 +51,6 @@ app.post('/login',function(req, res){
 })
 app.put('/updateProfile',function(req,res){
     const {file,name, phone_Number, address, email, password, dateOfBirth, security_Question, security_Answer} = req.body;
-    console.log("=======",file)
     UserRegistration.findOneAndUpdate({email:email}, {$set:{file, name, phone_Number, address, email, password, dateOfBirth, security_Question, security_Answer}},   
       function(err, user) { 
         if (err) {  
