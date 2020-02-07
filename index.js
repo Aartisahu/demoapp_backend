@@ -8,16 +8,19 @@ app.use(bodyParser.urlencoded({extended:true, limit:'5mb'}));
 var cors = require('cors')
 app.use(cors())
 
-app.get('/details',function(req,res){
-  UserRegistration.find({}, function(err, user){  
-    if(err){  
-       res.json(err);  
-    }  
-    else{   
-      console.log(user)     
-       res.json(user);  
-    }  
- });  
+app.post('/details',function(req,res){
+  const _id=req.body;
+  UserRegistration.findOne({_id},
+    (error, user) => {
+       if (error) {
+         res.send(error);
+       } else if (!user) {
+         res.status(404).send("Data not found");
+       } else {
+         res.status(200).send(user);
+       }
+    }
+ )
 })
 app.post('/registration', function(req,res){
   const {_id,file, name, phone_Number, address, email, password, dateOfBirth, security_Question, security_Answer} = req.body;
