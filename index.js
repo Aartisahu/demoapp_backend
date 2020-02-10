@@ -8,8 +8,12 @@ app.use(bodyParser.urlencoded({extended:true, limit:'5mb'}));
 var cors = require('cors')
 app.use(cors())
 
-app.post('/details',function(req,res){
-  const _id=req.body;
+app.get('/details/:_id',function(req,res){
+
+  console.log('query========', req.query)
+  console.log('params========', req.params)
+
+  const _id=req.params;
   UserRegistration.findOne({_id},
     (error, user) => {
        if (error) {
